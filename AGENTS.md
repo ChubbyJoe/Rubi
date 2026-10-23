@@ -22,7 +22,9 @@ npm run build          # Build (no migrations); Vercel runs npm run vercel-build
 npm run typecheck      # Route types + tsc
 npm run db:generate    # SQL migration from src/lib/db/schema/
 npm run db:migrate     # Apply migrations to the branch in .env.local
-# Test, lint, format: not installed yet (/develop tooling, /test)
+npm run lint           # ESLint
+npm run format         # Prettier write (format:check in CI)
+# Test: not installed yet (/test)
 ```
 
 ## Specs
