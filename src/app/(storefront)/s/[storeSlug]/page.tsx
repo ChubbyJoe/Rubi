@@ -1,5 +1,6 @@
+import { permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
-import { getStorefront, PLACEHOLDER_SLUG } from "@/features/stores/storefront";
+import { PLACEHOLDER_SLUG, resolveStoreSlug } from "@/features/stores/storefront";
 
 export function generateStaticParams() {
   return [{ storeSlug: PLACEHOLDER_SLUG }];
@@ -15,15 +16,10 @@ export default function StorefrontPage({ params }: PageProps<"/s/[storeSlug]">) 
   );
 }
 
+// Placeholder content. Public storefront (feature 7) lists the products.
 async function Storefront({ params }: Pick<PageProps<"/s/[storeSlug]">, "params">) {
   const { storeSlug } = await params;
-  const store = await getStorefront(storeSlug);
-  return (
-    <>
-      <h1 className="text-2xl font-semibold">{store.slug}</h1>
-      <p className="text-sm opacity-70">
-        Scaffold storefront, read as {store.readAs}, cached at {store.renderedAt}.
-      </p>
-    </>
-  );
+  const store = await resolveStoreSlug(storeSlug);
+  if (store.retired) permanentRedirect(`/s/${store.currentSlug}`);
+  return <h1 className="text-2xl font-semibold">{store.currentSlug}</h1>;
 }

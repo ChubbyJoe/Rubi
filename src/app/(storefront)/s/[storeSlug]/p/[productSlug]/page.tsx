@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
-import { getStorefront, PLACEHOLDER_SLUG } from "@/features/stores/storefront";
+import { PLACEHOLDER_SLUG, resolveStoreSlug } from "@/features/stores/storefront";
 
 export function generateStaticParams() {
   return [{ storeSlug: PLACEHOLDER_SLUG, productSlug: PLACEHOLDER_SLUG }];
@@ -19,11 +20,12 @@ export default function ProductPage({ params }: PageProps<"/s/[storeSlug]/p/[pro
 
 async function Product({ params }: Pick<PageProps<"/s/[storeSlug]/p/[productSlug]">, "params">) {
   const { storeSlug, productSlug } = await params;
-  const store = await getStorefront(storeSlug);
+  const store = await resolveStoreSlug(storeSlug);
+  if (store.retired) permanentRedirect(`/s/${store.currentSlug}/p/${productSlug}`);
   return (
     <>
-      <Link href={`/s/${store.slug}`} className="underline">
-        {store.slug}
+      <Link href={`/s/${store.currentSlug}`} className="underline">
+        {store.currentSlug}
       </Link>
       <h1 className="text-2xl font-semibold">{productSlug}</h1>
     </>

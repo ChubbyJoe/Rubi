@@ -29,6 +29,20 @@
       "when": 1792769455506,
       "tag": "0003_stores_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792769585206,
+      "tag": "0004_catalog",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792769585828,
+      "tag": "0005_public_grants",
+      "breakpoints": true
     }
   ]
 }

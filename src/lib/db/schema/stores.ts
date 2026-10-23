@@ -17,7 +17,9 @@ import {
   currentUserId,
   id,
   rubiApp,
+  rubiPublic,
   storeOwned,
+  storePublished,
   updatedAt,
 } from "./rls";
 
@@ -58,6 +60,11 @@ export const stores = pgTable(
       using: sql`id = ${currentStoreId} or owner_user_id = ${currentUserId}`,
       withCheck: sql`id = ${currentStoreId} or owner_user_id = ${currentUserId}`,
     }),
+    pgPolicy("stores_public", {
+      for: "select",
+      to: rubiPublic,
+      using: sql`published_at is not null`,
+    }),
   ],
 );
 
@@ -84,5 +91,6 @@ export const storeSlugs = pgTable(
       using: storeOwned,
       withCheck: storeOwned,
     }),
+    pgPolicy("store_slugs_public", { for: "select", to: rubiPublic, using: storePublished }),
   ],
 );
