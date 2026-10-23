@@ -1,7 +1,7 @@
 # 0002. Store scoped relational data model with row level security
 
 **Date**: 2026-10-23
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 
