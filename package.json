@@ -20,7 +20,8 @@
     "format:check": "prettier --check .",
     "prepare": "husky",
     "test": "vitest run --project unit",
-    "test:db": "vitest run --project db"
+    "test:db": "vitest run --project db",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.11",

@@ -63,13 +63,13 @@ spec [0002](../specs/0002-data-model/index.md) · code in `src/lib/db/`, `src/fe
 ### 4. Design system & UI foundation · in-progress
 Visual language, layout primitives and base components, mobile first, so the seller dashboard and storefronts feel cohesive, credible and accessible.
 **Done when:** `design.md` covers type, color, spacing and components; base components meet contrast, labeling and keyboard basics and stay light on low data connections.
-spec [0003](../specs/0003-design-system-ui-foundation/index.md)
+spec [0003](../specs/0003-design-system-ui-foundation/index.md) · code in `DESIGN.md`, `src/app/globals.css`, `src/components/`, `src/lib/design/`, `e2e/`
 - [x] Design it (spec): `/architect design system & UI foundation`
-- [ ] Build it: `/develop design system & UI foundation`
+- [x] Build it: `/develop design system & UI foundation`
   - [x] Thread: adapted `DESIGN.md`, Satoshi, shadcn init, full token contract, contrast and drift tests, Button on both surfaces (AC-1 to AC-3, AC-5, AC-11)
   - [x] Primitives and status: restyled shadcn primitives, toasts, skeleton, `StatusBadge`, token lint rule (AC-2, AC-6, AC-7, AC-13, AC-14)
   - [x] Brand and shells: wordmark and icons, Admin shell, shop theme contract and Shop shell (AC-3, AC-4, AC-8 to AC-10, AC-13)
-  - [ ] Preview and proof: `/dev/ui` pages, Playwright with axe at mobile size (AC-12)
+  - [x] Preview and proof: `/dev/ui` pages, Playwright with axe at mobile size (AC-12)
 - [ ] Verify it: `/check verify design system & UI foundation`
 - [ ] Test it: `/test design system & UI foundation`
 
