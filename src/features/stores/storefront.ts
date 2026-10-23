@@ -1,11 +1,12 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
-import { sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { withPublic } from "@/lib/db";
-
-const SLUG = /^[a-z0-9](?:[a-z0-9-]{0,48}[a-z0-9])?$/;
+import { stores, storeSlugs } from "@/lib/db/schema";
+import { STORE_SLUG } from "./schemas";
 
 export const storeSlugTag = (slug: string) => `store-slug:${slug}`;
+export const storeTag = (storeId: string) => `store:${storeId}`;
 
 /**
  * Cache Components needs at least one param from generateStaticParams. This
@@ -14,26 +15,39 @@ export const storeSlugTag = (slug: string) => `store-slug:${slug}`;
  */
 export const PLACEHOLDER_SLUG = "__shell__";
 
+export type ResolvedStore = {
+  readonly storeId: string;
+  readonly currentSlug: string;
+  /** True when `slug` is an old slug; the route redirects to `currentSlug`. */
+  readonly retired: boolean;
+};
+
 /**
- * Cached storefront read. Takes only the slug, never the session.
- * Invalidation is explicit: seller actions call updateTag for every tag.
- *
- * Scaffold placeholder: there is no `stores` table yet (Data model,
- * feature 3), so this proves the rubi_public read path only. Public
- * storefront (feature 7) loads the store here, tags `store:<storeId>`, and
- * calls notFound() for an unknown or unpublished slug.
+ * Cached storefront lookup of a current or retired slug, read as
+ * rubi_public, so unknown and unpublished stores are both not found. Takes
+ * only the slug, never the session. Seller actions call updateTag for
+ * `store-slug:<slug>` and `store:<id>`.
  */
-export async function getStorefront(slug: string) {
+export async function resolveStoreSlug(slug: string): Promise<ResolvedStore> {
   "use cache";
   cacheLife("days");
   cacheTag(storeSlugTag(slug));
 
-  if (!SLUG.test(slug)) notFound();
+  if (!STORE_SLUG.test(slug)) notFound();
 
-  const [row] = await withPublic(async (tx) => {
-    const result = await tx.execute<{ role: string }>(sql`select current_user as role`);
-    return result.rows;
-  });
+  const [row] = await withPublic((tx) =>
+    tx
+      .select({
+        storeId: storeSlugs.storeId,
+        currentSlug: stores.slug,
+        retiredAt: storeSlugs.retiredAt,
+      })
+      .from(storeSlugs)
+      .innerJoin(stores, eq(stores.id, storeSlugs.storeId))
+      .where(eq(storeSlugs.slug, slug)),
+  );
+  if (!row) notFound();
 
-  return { slug, readAs: row.role, renderedAt: new Date().toISOString() };
+  cacheTag(storeTag(row.storeId));
+  return { storeId: row.storeId, currentSlug: row.currentSlug, retired: row.retiredAt !== null };
 }

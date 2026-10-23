@@ -40,6 +40,33 @@ export function withStore<T>(storeId: string, fn: (tx: Tx) => Promise<T>) {
 }
 
 /**
+ * Runs `fn` in a transaction that knows only the signed in user, to find
+ * (or create) that user's store. `userId` must come from the session.
+ */
+export function withUser<T>(userId: string, fn: (tx: Tx) => Promise<T>) {
+  return db.transaction(async (tx) => {
+    await tx.execute(sql`select set_config('app.user_id', ${userId}, true)`);
+    return fn(tx);
+  });
+}
+
+/**
+ * Store setup only. Picks a fresh store id and sets both `app.user_id` and
+ * `app.store_id`, so the store and its first `store_slugs` row are written
+ * under the normal policies in one transaction.
+ */
+export function withNewStore<T>(userId: string, fn: (tx: Tx, storeId: string) => Promise<T>) {
+  return db.transaction(async (tx) => {
+    const result = await tx.execute<{ id: string }>(sql`select public.uuid_generate_v7() as id`);
+    const storeId = result.rows[0].id;
+    await tx.execute(
+      sql`select set_config('app.user_id', ${userId}, true), set_config('app.store_id', ${storeId}, true)`,
+    );
+    return fn(tx, storeId);
+  });
+}
+
+/**
  * Runs `fn` as rubi_public (read only, published rows only). Storefront
  * reads go through here and never touch the session, cookies or headers.
  */
@@ -51,4 +78,15 @@ export function withPublic<T>(fn: (tx: Tx) => Promise<T>) {
     },
     { accessMode: "read only" },
   );
+}
+
+/**
+ * Guest checkout. Read write, but as rubi_public, whose only writable thing
+ * is `place_order` (it has no INSERT, UPDATE or DELETE on any table).
+ */
+export function withCheckout<T>(fn: (tx: Tx) => Promise<T>) {
+  return db.transaction(async (tx) => {
+    await tx.execute(sql`set local role rubi_public`);
+    return fn(tx);
+  });
 }

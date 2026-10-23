@@ -15,7 +15,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 |---|---------|-------|--------|
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | done |
-| 3 | Data model | Foundation | planned |
+| 3 | Data model | Foundation | in-progress |
 | 4 | Design system & UI foundation | Foundation | planned |
 | 5 | Seller sign up & store setup | Slice 1 | planned |
 | 6 | Add a product | Slice 1 | planned |
@@ -47,10 +47,18 @@ code in `AGENTS.md`, `eslint.config.mjs`, `.prettierrc.json`, `.husky/`, `.githu
 - [x] Capture conventions + tooling choices: `/audit`
 - [x] Install lint, format, pre-commit and CI: `/develop tooling`
 
-### 3. Data model · needs a decision
+### 3. Data model · in-progress
 Core entities every feature builds on: sellers, stores, products, orders, order items, customers, payments. Shaped so expenses, online payments and insights can be added later without a breaking migration.
 **Done when:** entities and relationships support all planned slices, money is stored safely in naira, and each seller's data is isolated from every other seller's.
-- [ ] Design it (spec): `/architect data model`
+spec [0002](../specs/0002-data-model/index.md) · code in `src/lib/db/`, `src/features/stores/`, `src/features/orders/`, `drizzle/`, `scripts/`
+- [x] Design it (spec): `/architect data model`
+- [x] Build it: `/develop data model`
+  - [x] Store thread: uuid v7, role fix, `stores` + `store_slugs` with RLS, `withUser` / `withNewStore`, `getSellerContext` returns `storeId` (AC-1, AC-2, AC-4, AC-5, AC-11, AC-12)
+  - [x] Catalog and public reads: products, variants, images, `rubi_public` grants and policies, real `resolveStoreSlug` (AC-1, AC-3, AC-5, AC-11, AC-13)
+  - [x] Orders and checkout: customers, orders, items, events, `place_order`, `withCheckout`, `placeOrder` (AC-6 to AC-11)
+  - [x] Seed data and isolation checks: `scripts/seed.ts`, every critical test scenario on the dev branch (AC-2, AC-3, AC-10 to AC-12, AC-14)
+- [ ] Verify it: `/check verify data model`
+- [ ] Test it: `/test data model`
 
 ### 4. Design system & UI foundation · needs a decision
 Visual language, layout primitives and base components, mobile first, so the seller dashboard and storefronts feel cohesive, credible and accessible.

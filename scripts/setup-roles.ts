@@ -3,7 +3,9 @@
 //
 // rubi_app:    runtime role, LOGIN, no BYPASSRLS. Gets table grants by default.
 // rubi_public: NOLOGIN, read only; rubi_app switches into it with SET LOCAL
-//              ROLE. Its grants and RLS policies come with the Data model.
+//              ROLE but never inherits it (INHERIT FALSE), so its grants and
+//              policies apply only after the switch. Grants and policies
+//              live in the migrations (migration 0001 repeats this grant).
 //
 // Created in SQL, not the Neon API: API roles join neon_superuser, which
 // bypasses RLS.
@@ -37,7 +39,8 @@ async function main() {
         end if;
       end $$`);
     await client.query(`alter role rubi_app with login nobypassrls password ${quotedPassword}`);
-    await client.query("grant rubi_public to rubi_app");
+    await client.query("revoke rubi_public from rubi_app");
+    await client.query("grant rubi_public to rubi_app with inherit false, set true");
     await client.query(`grant connect on database "${db}" to rubi_app`);
     await client.query("grant usage on schema public to rubi_app, rubi_public");
     await client.query(
