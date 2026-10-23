@@ -54,7 +54,13 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
       )}
       <label className="flex flex-col gap-1">
         Email
-        <input name="email" type="email" autoComplete="email" required className="rounded border px-3 py-2" />
+        <input
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+          className="rounded border px-3 py-2"
+        />
       </label>
       <label className="flex flex-col gap-1">
         Password
@@ -72,13 +78,21 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
           {error}
         </p>
       )}
-      <button type="submit" disabled={pending} className="rounded bg-foreground px-3 py-2 text-background disabled:opacity-60">
+      <button
+        type="submit"
+        disabled={pending}
+        className="rounded bg-foreground px-3 py-2 text-background disabled:opacity-60"
+      >
         {pending ? "Please wait…" : mode === "sign-up" ? "Create account" : "Sign in"}
       </button>
       {mode === "sign-up" ? (
-        <Link href="/sign-in" className="underline">I already have an account</Link>
+        <Link href="/sign-in" className="underline">
+          I already have an account
+        </Link>
       ) : (
-        <Link href="/sign-up" className="underline">Create an account</Link>
+        <Link href="/sign-up" className="underline">
+          Create an account
+        </Link>
       )}
     </form>
   );

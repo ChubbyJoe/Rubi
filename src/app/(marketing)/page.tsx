@@ -6,8 +6,12 @@ export default function Home() {
       <h1 className="text-3xl font-semibold">Rubi</h1>
       <p>A professional storefront and order book for sellers on WhatsApp, Instagram and TikTok.</p>
       <div className="flex gap-4">
-        <Link href="/sign-up" className="underline">Create your store</Link>
-        <Link href="/sign-in" className="underline">Sign in</Link>
+        <Link href="/sign-up" className="underline">
+          Create your store
+        </Link>
+        <Link href="/sign-in" className="underline">
+          Sign in
+        </Link>
       </div>
     </main>
   );

@@ -12,7 +12,8 @@ import { Client } from "pg";
 async function main() {
   const url = process.env.DATABASE_URL_UNPOOLED;
   const password = process.env.RUBI_APP_DB_PASSWORD;
-  if (!url || !password) throw new Error("DATABASE_URL_UNPOOLED and RUBI_APP_DB_PASSWORD are required");
+  if (!url || !password)
+    throw new Error("DATABASE_URL_UNPOOLED and RUBI_APP_DB_PASSWORD are required");
 
   const client = new Client({ connectionString: url });
   await client.connect();
@@ -21,7 +22,9 @@ async function main() {
       "select current_user as owner, current_database() as db",
     );
     const { owner, db } = rows[0];
-    const quotedPassword = (await client.query<{ q: string }>("select quote_literal($1) as q", [password])).rows[0].q;
+    const quotedPassword = (
+      await client.query<{ q: string }>("select quote_literal($1) as q", [password])
+    ).rows[0].q;
 
     await client.query("begin");
     await client.query(`

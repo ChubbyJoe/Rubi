@@ -1,0 +1,10 @@
+.next/
+out/
+build/
+coverage/
+drizzle/
+package-lock.json
+skills-lock.json
+next-env.d.ts
+.claude/
+docs/
