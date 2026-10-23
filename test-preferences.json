@@ -1,0 +1,9 @@
+{
+  "tool": "vitest",
+  "gate": null,
+  "additionalTools": [],
+  "e2eTool": "playwright",
+  "testDir": "beside the source",
+  "filePattern": "*.test.ts (unit), *.db.test.ts (needs the Neon branch in .env.local)",
+  "packageManager": "npm"
+}
