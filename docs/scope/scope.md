@@ -67,7 +67,7 @@ spec [0003](../specs/0003-design-system-ui-foundation/index.md)
 - [x] Design it (spec): `/architect design system & UI foundation`
 - [ ] Build it: `/develop design system & UI foundation`
   - [x] Thread: adapted `DESIGN.md`, Satoshi, shadcn init, full token contract, contrast and drift tests, Button on both surfaces (AC-1 to AC-3, AC-5, AC-11)
-  - [ ] Primitives and status: restyled shadcn primitives, toasts, skeleton, `StatusBadge`, token lint rule (AC-2, AC-6, AC-7, AC-13, AC-14)
+  - [x] Primitives and status: restyled shadcn primitives, toasts, skeleton, `StatusBadge`, token lint rule (AC-2, AC-6, AC-7, AC-13, AC-14)
   - [ ] Brand and shells: wordmark and icons, Admin shell, shop theme contract and Shop shell (AC-3, AC-4, AC-8 to AC-10, AC-13)
   - [ ] Preview and proof: `/dev/ui` pages, Playwright with axe at mobile size (AC-12)
 - [ ] Verify it: `/check verify design system & UI foundation`

@@ -26,7 +26,7 @@ export function SetupForm() {
         />
       </label>
       {state.error && (
-        <p role="alert" className="text-red-600">
+        <p role="alert" className="text-destructive">
           {state.error}
         </p>
       )}
