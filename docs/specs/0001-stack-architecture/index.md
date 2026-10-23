@@ -1,7 +1,7 @@
 # 0001. Next.js on Vercel with Neon Postgres as the Rubi foundation
 
 **Date**: 2026-10-23
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 
