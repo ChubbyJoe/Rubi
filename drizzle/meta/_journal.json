@@ -8,6 +8,27 @@
       "when": 1792750425518,
       "tag": "0000_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792769454396,
+      "tag": "0001_uuid_v7_and_roles",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792769454971,
+      "tag": "0002_stores",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792769455506,
+      "tag": "0003_stores_grants",
+      "breakpoints": true
     }
   ]
 }
