@@ -2,8 +2,10 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 // Previews have no fixed URL, so auth and app URLs follow the deployment.
-const previewUrl = (branchUrl?: string, deploymentUrl?: string) => {
-  const host = branchUrl ?? deploymentUrl;
+// Production uses the explicit URL, else the project's production domain
+// (the vercel.app URL until a custom domain exists).
+const httpsUrl = (...hosts: (string | undefined)[]) => {
+  const host = hosts.find(Boolean);
   return host ? `https://${host}` : undefined;
 };
 
@@ -39,8 +41,8 @@ export const env = createEnv({
     DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     BETTER_AUTH_URL: isPreview
-      ? previewUrl(process.env.VERCEL_BRANCH_URL, process.env.VERCEL_URL)
-      : process.env.BETTER_AUTH_URL,
+      ? httpsUrl(process.env.VERCEL_BRANCH_URL, process.env.VERCEL_URL)
+      : (process.env.BETTER_AUTH_URL ?? httpsUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL)),
     VERCEL_URL: process.env.VERCEL_URL,
     VERCEL_BRANCH_URL: process.env.VERCEL_BRANCH_URL,
     R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
@@ -50,11 +52,9 @@ export const env = createEnv({
     LOG_LEVEL: process.env.LOG_LEVEL,
     NEXT_PUBLIC_APP_URL:
       process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
-        ? previewUrl(
-            process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL,
-            process.env.NEXT_PUBLIC_VERCEL_URL,
-          )
-        : process.env.NEXT_PUBLIC_APP_URL,
+        ? httpsUrl(process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL, process.env.NEXT_PUBLIC_VERCEL_URL)
+        : (process.env.NEXT_PUBLIC_APP_URL ??
+          httpsUrl(process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL)),
     NEXT_PUBLIC_IMAGE_BASE_URL: process.env.NEXT_PUBLIC_IMAGE_BASE_URL,
   },
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
