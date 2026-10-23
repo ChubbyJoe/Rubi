@@ -76,7 +76,7 @@ The DESIGN.md role on the left; the CSS variable code uses on the right. Compone
 | surface strong | `--secondary`, `--surface-strong` (extra) | #f1e5e8 | #efedeb | #352a2d |
 | hairline | `--border` | #eadcdf | #e7e5e4 | #3d3034 |
 | hairline soft | `--hairline-soft` (extra) | #f2e8ea | #f0eeec | #33282b |
-| border strong (inputs, selects, steppers, uploader edge) | `--input` | **#9a7f85** | **#8a8580** | **#8a767a** |
+| border strong (inputs, selects, steppers, uploader edge) | `--input` | **#987d83** | **#8a8580** | **#8a767a** |
 | focus | `--ring` | #2a1a1d | #1c1917 | #f6eef0 |
 | primary / accent | `--primary` | #a31621 | seller accent | #c4303b |
 | on primary | `--primary-foreground` | #fcf7f8 | derived (feature 13) | #fcf7f8 |
@@ -96,7 +96,7 @@ The DESIGN.md role on the left; the CSS variable code uses on the right. Compone
 | legal link | `--legal-link` (extra) | #2563eb | #2563eb | #93b4f5 |
 | charts | `--chart-1` to `--chart-5` | #a31621, #4f86c6, #edb8bd, #d4646d, #7e1019 | n/a | #c4303b, #4f86c6, #4a1418, #7e1f26, #d9505a |
 
-Bold values change `DESIGN.md`: input borders reach 3:1 (the old #d3c1c5 and #d6d3d1 were 1.62:1 and 1.43:1), and the dark press state darkens instead of lightening (Snow on #d9505a was 3.77:1). Placeholders use `--muted-foreground`; `--muted-soft` is for disabled text only. Dark status fills ("16%") are `color-mix(in srgb, <status text> 16%, var(--background))` in CSS, and `contrast.ts` exports the same sRGB blend so tests measure the real fill. Stone hairline soft (#f0eeec) is derived; `DESIGN.md` had no stone value for it.
+Bold values change `DESIGN.md`: input borders reach 3:1 on every surface (the old #d3c1c5 and #d6d3d1 were 1.62:1 and 1.43:1; warm #987d83 gives 3.54, 3.29 and 3.06:1 on background, muted and secondary; the AC-11 contrast test is the source of truth for the stone and dark values), and the dark press state darkens instead of lightening (Snow on #d9505a was 3.77:1). Placeholders use `--muted-foreground`; `--muted-soft` is for disabled text only. Dark status fills ("16%") are `color-mix(in srgb, <status text> 16%, var(--background))` in CSS, and `contrast.ts` exports the same sRGB blend so tests measure the real fill. Stone hairline soft (#f0eeec) is derived; `DESIGN.md` had no stone value for it.
 
 **Contrast pairs** (the AC-11 test list; "text" needs 4.5:1, "boundary" needs 3:1). Run each in warm light, stone light and Admin dark unless marked:
 - Text: `foreground`, `body`, `muted-foreground` on `background`, `muted`, `secondary`
@@ -116,7 +116,7 @@ Bold values change `DESIGN.md`: input borders reach 3:1 (the old #d3c1c5 and #d6
 - Spacing: Tailwind's default 4px scale already matches; `DESIGN.md` names map to numbers (`xxs` 0.5, `xs` 1, `sm` 2, `md` 3, `base` 4, `lg` 6, `xl` 8, `xxl` 12, `section` 16). No named spacing tokens, because names like `md` would collide with Tailwind's size utilities.
 - Shadow: `--shadow-float` with the three layer value from `DESIGN.md`; under `data-neutrals="stone"` the last layer becomes `rgba(28, 25, 23, 0.08)`.
 - Containers: `--container-shop` 80rem (1280px), `--container-admin` 75rem (1200px).
-- Breakpoints: `--breakpoint-sm: initial`, `--breakpoint-md: 46.5rem`, `--breakpoint-lg: 70.5rem`, `--breakpoint-xl: 90rem`, `--breakpoint-2xl: initial`.
+- Breakpoints: `sm` keeps Tailwind's default 640px (shadcn's generated `sm:` classes rely on it), `--breakpoint-md: 46.5rem`, `--breakpoint-lg: 70.5rem`, `--breakpoint-xl: 90rem`, `--breakpoint-2xl: initial`.
 - Dark variant: `@custom-variant dark` scoped to `@media (prefers-color-scheme: dark)` plus `html:has([data-surface="admin"])`, so shadcn's own `dark:` classes fire only on the Admin. `color-scheme: dark` is set in the same block so native controls (NativeSelect, scrollbars) follow.
 
 ### Shop theme contract (feature 13 fills it)
@@ -141,14 +141,14 @@ export function shopThemeCss(theme: ShopTheme): string | null;
 
 `shopThemeCss` is pure: it returns `null` when the theme equals the default or any color fails `/^#[0-9a-f]{6}$/i`, else one `html:has([data-surface="shop"]){...}` rule setting `--primary`, `--primary-foreground`, `--primary-active`, `--primary-tint` and `--ring`. `ShopShell` renders it in a `<style>` element. When feature 13 stores themes, resolve the theme outside any Suspense boundary so the accent never flashes in after first paint.
 
-The sample stone theme for `/dev/ui/shop?neutrals=stone` (a constant in the preview page): accent `#0f766e`, onAccent `#fafaf9` (5.24:1), accentActive `#0b5e58` (7.30:1), accentTint `#d0e2e0` (18% over stone canvas), ring `#0f766e` (5.24:1 on the canvas), neutrals `stone`. Deriving a theme from a seller's chosen color (contrast guard, auto darken, stone switch), storing it, and the picker are feature 13.
+The sample stone theme for `/dev/ui/shop?neutrals=stone` (`SAMPLE_STONE_THEME` in `src/lib/design/tokens.ts`, five color values shared by the preview page, the contrast test and the `shopThemeCss` unit test; each caller spreads it with `neutrals: "stone"`): accent `#0f766e`, onAccent `#fafaf9` (5.24:1), accentActive `#0b5e58` (7.30:1), accentTint `#d0e2e0` (18% over stone canvas), ring `#0f766e` (5.24:1 on the canvas). Deriving a theme from a seller's chosen color (contrast guard, auto darken, stone switch), storing it, and the picker are feature 13.
 
 ### Components and files
 
 - `src/components/ui/*`: shadcn primitives listed in AC-6, restyled by editing their `cva` variants (keep variant names). Pending buttons compose `Spinner` with `disabled`.
 - `src/components/status-badge.tsx`: `StatusBadge({ tone, children })`, icons from `lucide-react`: success `Check`, info `Clock`, attention `TriangleAlert`, neutral `Minus`. Mapping an order or payment state to a tone belongs to the feature that owns the state.
 - `src/components/brand/wordmark.tsx` (`Wordmark`, `DotMark`) and `src/components/brand/powered-by.tsx`.
-- `src/components/admin-surface.tsx`: `AdminSurface({ children })`, a server component rendering the `data-surface="admin"` wrapper and the one `Toaster` (a client component imported into it). Used by the `(auth)`, `/app` and `(dev)` layouts.
+- `src/components/admin-surface.tsx`: `AdminSurface({ children })`, a server component rendering the `data-surface="admin"` wrapper and the one `Toaster` (a client component imported into it). Used by the `(auth)`, `/app` and `(dev)/(admin)` layouts.
 - `src/components/admin-shell/`: `admin-shell.tsx` (server, layout frame; the nav, rail and bottom bar render statically, and only the topbar identity, meaning store name, View shop and account menu, sits in Suspense with a fallback of the same fixed height), `nav.ts` (`ADMIN_NAV`, typed with `Route` and a `tab` flag for the bottom bar, at most 4 tabs), `nav-link.tsx` (client, `usePathname` for the active state), `account-menu.tsx` (client, DropdownMenu, moves the current sign out button here), `more-sheet.tsx` (client, Sheet with the non tab items, View shop and Sign out).
 - `src/components/shop-shell/`: `shop-shell.tsx` (`ShopShell({ name, slug, theme, children })`), `shop-header.tsx`, `shop-footer.tsx`, all server components. The shell renders only for a resolved store; unknown slugs and the `__shell__` placeholder hit `notFound()` in `resolveStoreSlug` before the shell renders.
 - Fonts: `src/app/fonts/Satoshi-Variable.woff2` plus its licence file, loaded in `src/app/layout.tsx` with `next/font/local` (`weight: "300 900"`, `display: "swap"`, `preload: true`, `adjustFontFallback: "Arial"`) as `--font-satoshi`, replacing Geist. If the font lacks `₦`, the fallback stack renders that glyph; note it in `DESIGN.md`.
@@ -168,8 +168,8 @@ The sample stone theme for `/dev/ui/shop?neutrals=stone` (a constant in the prev
 | `src/app/global-error.tsx` | renders its own `<html>`, so it imports `globals.css` itself and stays Rubi light |
 | `src/app/(dashboard)/app/setup/page.tsx` | stays outside `(shell)`, so a seller without a store never hits `getSellerContext()` in a layout |
 | `src/app/(storefront)/s/[storeSlug]/layout.tsx` (new) | `ShopShell` with `DEFAULT_SHOP_THEME`, the shop name and current slug, awaiting `params` under Suspense; `generateStaticParams` stays on the page; the page drops its own `<main>` |
-| `src/app/(dev)/layout.tsx` (new) | `AdminSurface` for `/dev/ui`; the shop preview page renders `ShopShell` itself |
-| `src/app/(dev)/dev/ui/page.tsx`, `.../dev/ui/shop/page.tsx` (new) | preview pages, `notFound()` when `VERCEL_ENV` is `production` (read through `@/lib/env`; add it to the env schema if absent); the shop page reads `searchParams` under Suspense |
+| `src/app/(dev)/(admin)/layout.tsx` (new) | `AdminSurface` for `/dev/ui` only. The shop preview sits outside this group: under the Admin wrapper, `html:has([data-surface="admin"])` would match and turn the shop preview dark |
+| `src/app/(dev)/(admin)/dev/ui/page.tsx`, `src/app/(dev)/dev/ui/shop/page.tsx` (new) | preview pages, `notFound()` when `VERCEL_ENV` is `production` (read through `@/lib/env`, where `VERCEL_ENV` is in the env schema); the shop page reads `searchParams` under Suspense |
 | `src/app/(marketing)/page.tsx`, `not-found.tsx`, `error.tsx` | use `Wordmark`, `Button` and type tokens; stay Rubi light |
 | `src/app/manifest.ts` | icons and Snow colors |
 
@@ -257,7 +257,7 @@ import { formatNaira } from "@/lib/money";
 - The contrast and token drift Vitest tests (AC-11).
 - The axe Playwright test (AC-12).
 
-**Rollout**: new code immediately. The only existing violations are the scaffold placeholder forms, which features 5 to 7 replace; they use no palette colors, so the lint rule passes on day one.
+**Rollout**: new code immediately. The only existing violations were the scaffold placeholder forms (`text-red-600` in `auth-form.tsx` and `setup-form.tsx`), switched to `text-destructive` when the rule landed; features 5 to 7 replace those forms.
 
 **Exceptions**: `src/app/icon.svg`, `src/app/manifest.ts`, the generated icon images, `src/lib/design/tokens.ts` and the `Wordmark` dot (Madder is the brand mark itself) may use literal hex values.
 
@@ -265,7 +265,7 @@ import { formatNaira } from "@/lib/money";
 
 Tracer Bullet: milestone 1 proves one thin thread through every layer (font, tokens, one primitive, both surfaces on real routes, the contrast test). Each later milestone thickens one segment and ships end to end.
 
-**Precondition (you, before `/develop`)**: download Satoshi from Fontshare, confirm its licence allows self hosting, and place `Satoshi-Variable.woff2` and the licence text in `src/app/fonts/`. The build cannot fetch it.
+**Precondition (you, before `/develop`)**: download Satoshi from Fontshare, confirm its licence allows self hosting, and place `Satoshi-Variable.woff2` and the licence text in `src/app/fonts/`. The build cannot fetch it. The ITF Free Font License allows self hosting but forbids redistribution (including through a repository), so the repository must be private while it holds the font file.
 
 **Milestone 1: Thread (tokens to a real route on both surfaces)**
 1. Copy `../Ruby-design/DESIGN.md` into the repo root and adapt it as AC-1 describes (naira, MVP copy, Later tags, this spec's token changes in prose and front matter, the mapping table), satisfies **AC-1**
@@ -281,11 +281,11 @@ Tracer Bullet: milestone 1 proves one thin thread through every layer (font, tok
 
 **Milestone 3: Brand and shells**
 9. `Wordmark`, `DotMark`, `PoweredBy`, `icon.svg`, Apple and manifest icons through `sharp`, delete `favicon.ico`, manifest colors; restyle marketing, not found, error and global error with them, satisfies **AC-10**, **AC-3**
-10. Extend `getSellerContext()` with `storeName`, `storeSlug`, `storePublished` in its existing query (update the `SellerContext` type and its db tests); move `/app` into `(shell)`; build `AdminShell` (sidebar with active bar, icon rail, bottom tab bar with safe area, More sheet, topbar, account menu, skip link, the one `<main>`) from `ADMIN_NAV`, satisfies **AC-8**, **AC-13**
+10. Extend `getSellerContext()` with `storeName`, `storeSlug`, `storePublished` in its existing query (update the `SellerContext` type; it has no db test of its own, since it reads request headers, so `/check verify` covers it through the Admin topbar); move `/app` into `(shell)`; build `AdminShell` (sidebar with active bar, icon rail, bottom tab bar with safe area, More sheet, topbar, account menu, skip link, the one `<main>`) from `ADMIN_NAV`, satisfies **AC-8**, **AC-13**
 11. `shop-theme.ts` (`ShopTheme`, `DEFAULT_SHOP_THEME`, `shopThemeCss`) with unit tests; add `name` to `resolveStoreSlug`; build `ShopShell` and the `[storeSlug]/layout.tsx`, satisfies **AC-4**, **AC-9**
 
 **Milestone 4: Preview and proof**
-12. `(dev)` layout and the `/dev/ui` and `/dev/ui/shop` preview pages with every primitive and state, gated off in production, satisfies **AC-12**
+12. `(dev)/(admin)` layout and the `/dev/ui` and `/dev/ui/shop` preview pages with every primitive and state, gated off in production, satisfies **AC-12**
 13. Install `@playwright/test` and `@axe-core/playwright` (or reuse the `/test` setup if it lands first): `playwright.config.ts` with `webServer` running `npm run dev` and `baseURL` `http://localhost:3000`, a `test:e2e` script, and the mobile viewport axe and keyboard test across the four variants. It runs locally and in `/check verify`; CI adds it once CI has a database branch, satisfies **AC-12**
 
 ## Consequences
@@ -307,7 +307,7 @@ Tracer Bullet: milestone 1 proves one thin thread through every layer (font, tok
 
 **Neutral**:
 - `/app` moves into a `(shell)` route group; the URL does not change.
-- Geist is removed; `lucide-react`, `sonner`, Radix packages, `class-variance-authority`, `tailwind-merge`, `clsx` and `tw-animate-css` arrive with shadcn init.
+- Geist is removed; `lucide-react`, `sonner`, Radix packages, `class-variance-authority`, the `cn` npm package (in place of `clsx` plus `tailwind-merge`) and `tw-animate-css` arrive with shadcn init. `src/lib/utils.ts` builds the `cn` wrapper with `createCn` from `cn/config` and registers the type tokens as font sizes, so `text-display-xl` and `text-muted-foreground` never cancel each other. Components import `cn` from `@/lib/utils`, never from the package (shadcn's generated files import the package; repoint them after each `shadcn add`).
 - The dark Madder press state and destructive fill differ from `DESIGN.md`'s original values, recorded in the adapted copy.
 
 ## Follow-up

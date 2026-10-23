@@ -133,3 +133,16 @@ Measured with the WCAG 2.x relative luminance formula. Text needs 4.5:1; compone
 | Rejected: placeholder muted soft warm / stone | 3.2 / 2.41 |
 | Rejected: Snow on dark press #d9505a | 3.77 |
 | Rejected: error text on a 10% error tint | 4.16 |
+## Corrections recorded during the build (2026-10-23)
+
+`/develop` found these while building; each was confirmed with you, then folded into `index.md`.
+
+- **Warm input border #9a7f85 → #987d83.** The original reached 3.44:1 on the canvas but only 2.98:1 on `secondary`, failing the spec's own "input on secondary" pair. A small darkening to #987d83 passes everywhere (3.54, 3.29, 3.06:1).
+- **`sm` breakpoint kept at 640px.** The token list said `--breakpoint-sm: initial` while AC-2 said `sm` stays at 640px. AC-2 is right: shadcn's generated classes use `sm:`.
+- **Admin preview layout moved to `(dev)/(admin)/layout.tsx`.** One `(dev)` layout wrapping both previews would put the shop preview inside the Admin surface, so the `html:has(...)` dark tokens would apply to it.
+- **Scaffold forms did use a palette color** (`text-red-600`). They now use `text-destructive`, so the lint rule still passes.
+- **`getSellerContext` has no db test** to update; it reads request headers. Its three new fields are checked through the Admin topbar in `verify.md`.
+- **`cn` package.** shadcn init now installs the `cn` npm package instead of `clsx` plus `tailwind-merge`. The `@/lib/utils` wrapper uses `createCn` from `cn/config` with the type tokens registered as font sizes, and generated components are repointed to that wrapper.
+- **Font licence.** The Fontshare licence forbids redistribution, including through a repository, so the repository has to stay private while it holds the woff2.
+- **Sample stone theme** lives in `tokens.ts`, not in the preview page, so the contrast test and the page share one source.
+
