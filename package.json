@@ -18,7 +18,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest run --project unit",
+    "test:db": "vitest run --project db"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.11",
@@ -49,7 +51,8 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.5"
   },
   "engines": {
     "node": "24.x"
