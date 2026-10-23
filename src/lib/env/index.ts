@@ -28,6 +28,8 @@ export const env = createEnv({
     R2_SECRET_ACCESS_KEY: z.string().optional(),
     R2_BUCKET: z.string().optional(),
     LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+    // Read only by scripts/seed.ts, which refuses to run against this endpoint.
+    NEON_MAIN_ENDPOINT_ID: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.url(),
@@ -50,6 +52,7 @@ export const env = createEnv({
     R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
     R2_BUCKET: process.env.R2_BUCKET,
     LOG_LEVEL: process.env.LOG_LEVEL,
+    NEON_MAIN_ENDPOINT_ID: process.env.NEON_MAIN_ENDPOINT_ID,
     NEXT_PUBLIC_APP_URL:
       process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
         ? httpsUrl(process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL, process.env.NEXT_PUBLIC_VERCEL_URL)

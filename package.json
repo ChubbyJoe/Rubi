@@ -11,6 +11,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx --env-file=.env.local scripts/migrate.ts",
     "db:check": "drizzle-kit check",
+    "db:check-model": "tsx --env-file=.env.local scripts/check-data-model.ts",
+    "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
     "db:setup-roles": "tsx --env-file=.env.local scripts/setup-roles.ts",
     "auth:generate": "SKIP_ENV_VALIDATION=1 npx auth@latest generate --config src/lib/auth/index.ts --output src/lib/db/schema/auth.ts --yes && tsx scripts/auth-schema-tz.ts && prettier --write src/lib/db/schema/auth.ts",
     "lint": "eslint .",
