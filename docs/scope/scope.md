@@ -55,7 +55,7 @@ spec [0002](../specs/0002-data-model/index.md)
 - [ ] Build it: `/develop data model`
   - [x] Store thread: uuid v7, role fix, `stores` + `store_slugs` with RLS, `withUser` / `withNewStore`, `getSellerContext` returns `storeId` (AC-1, AC-2, AC-4, AC-5, AC-11, AC-12)
   - [x] Catalog and public reads: products, variants, images, `rubi_public` grants and policies, real `resolveStoreSlug` (AC-1, AC-3, AC-5, AC-11, AC-13)
-  - [ ] Orders and checkout: customers, orders, items, events, `place_order`, `withCheckout`, `placeOrder` (AC-6 to AC-11)
+  - [x] Orders and checkout: customers, orders, items, events, `place_order`, `withCheckout`, `placeOrder` (AC-6 to AC-11)
   - [ ] Seed data and isolation checks: `scripts/seed.ts`, every critical test scenario on the dev branch (AC-2, AC-3, AC-10 to AC-12, AC-14)
 - [ ] Verify it: `/check verify data model`
 - [ ] Test it: `/test data model`

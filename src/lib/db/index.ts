@@ -79,3 +79,14 @@ export function withPublic<T>(fn: (tx: Tx) => Promise<T>) {
     { accessMode: "read only" },
   );
 }
+
+/**
+ * Guest checkout. Read write, but as rubi_public, whose only writable thing
+ * is `place_order` (it has no INSERT, UPDATE or DELETE on any table).
+ */
+export function withCheckout<T>(fn: (tx: Tx) => Promise<T>) {
+  return db.transaction(async (tx) => {
+    await tx.execute(sql`set local role rubi_public`);
+    return fn(tx);
+  });
+}

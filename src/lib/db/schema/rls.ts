@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, type AnyColumn } from "drizzle-orm";
 import { pgRole, timestamp, uuid } from "drizzle-orm/pg-core";
 
 // Both roles are created by scripts/setup-roles.ts; drizzle-kit only
@@ -15,6 +15,12 @@ export const storeOwned = sql`store_id = ${currentStoreId}`;
 
 // The store row is visible to rubi_public only once published.
 export const storePublished = sql`exists (select 1 from public.stores s where s.id = store_id and s.published_at is not null)`;
+
+// `col IN ('a', 'b')` for a CHECK. Only for constant value sets, never input.
+export const oneOf = (column: AnyColumn, values: readonly string[]) =>
+  sql`${column} in (${sql.raw(values.map((value) => `'${value}'`).join(", "))})`;
+
+export const E164 = sql.raw(String.raw`'^\+[1-9][0-9]{7,14}$'`);
 
 export const id = () =>
   uuid("id")
