@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { getStorefront } from "@/features/stores/storefront";
+import { getStorefront, PLACEHOLDER_SLUG } from "@/features/stores/storefront";
+
+export function generateStaticParams() {
+  return [{ storeSlug: PLACEHOLDER_SLUG, productSlug: PLACEHOLDER_SLUG }];
+}
 
 // Scaffold placeholder. Public storefront (feature 7) loads the product.
 export default function ProductPage({ params }: PageProps<"/s/[storeSlug]/p/[productSlug]">) {

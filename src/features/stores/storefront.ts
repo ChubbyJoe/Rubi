@@ -8,6 +8,13 @@ const SLUG = /^[a-z0-9](?:[a-z0-9-]{0,48}[a-z0-9])?$/;
 export const storeSlugTag = (slug: string) => `store-slug:${slug}`;
 
 /**
+ * Cache Components needs at least one param from generateStaticParams. This
+ * placeholder fails the slug pattern, so it renders not found; real store
+ * pages render on first visit and then live in the ISR cache.
+ */
+export const PLACEHOLDER_SLUG = "__shell__";
+
+/**
  * Cached storefront read. Takes only the slug, never the session.
  * Invalidation is explicit: seller actions call updateTag for every tag.
  *

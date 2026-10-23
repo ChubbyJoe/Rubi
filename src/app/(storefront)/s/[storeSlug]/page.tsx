@@ -1,5 +1,9 @@
 import { Suspense } from "react";
-import { getStorefront } from "@/features/stores/storefront";
+import { getStorefront, PLACEHOLDER_SLUG } from "@/features/stores/storefront";
+
+export function generateStaticParams() {
+  return [{ storeSlug: PLACEHOLDER_SLUG }];
+}
 
 export default function StorefrontPage({ params }: PageProps<"/s/[storeSlug]">) {
   return (
