@@ -25,6 +25,8 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(JSON.stringify({ level: "error", message: "migrations: failed", error: String(error) }));
+  console.error(
+    JSON.stringify({ level: "error", message: "migrations: failed", error: String(error) }),
+  );
   process.exit(1);
 });

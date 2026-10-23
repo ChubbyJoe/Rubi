@@ -12,7 +12,11 @@
     "db:migrate": "tsx --env-file=.env.local scripts/migrate.ts",
     "db:check": "drizzle-kit check",
     "db:setup-roles": "tsx --env-file=.env.local scripts/setup-roles.ts",
-    "auth:generate": "SKIP_ENV_VALIDATION=1 npx auth@latest generate --config src/lib/auth/index.ts --output src/lib/db/schema/auth.ts --yes && tsx scripts/auth-schema-tz.ts"
+    "auth:generate": "SKIP_ENV_VALIDATION=1 npx auth@latest generate --config src/lib/auth/index.ts --output src/lib/db/schema/auth.ts --yes && tsx scripts/auth-schema-tz.ts && prettier --write src/lib/db/schema/auth.ts",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.11",
@@ -33,11 +37,27 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "drizzle-kit": "^0.31.11",
+    "eslint": "^10.13.0",
+    "eslint-config-next": "^16.4.2",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5"
   },
   "engines": {
     "node": "24.x"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,yml,yaml}": [
+      "prettier --write"
+    ]
   }
 }

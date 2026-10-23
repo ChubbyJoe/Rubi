@@ -13,15 +13,17 @@ You need Node 24 (`nvm use`).
 
 ## Scripts
 
-| Script | What it does |
-|---|---|
-| `npm run typecheck` | Generates route types, then runs `tsc` |
-| `npm run build` | Production build (no migrations) |
-| `npm run vercel-build` | What Vercel runs: migrations under an advisory lock, then `next build` |
-| `npm run db:generate` | Writes a SQL migration from the schema in `src/lib/db/schema/` |
-| `npm run db:migrate` | Applies migrations to the branch in `.env.local` |
-| `npm run auth:generate` | Regenerates the Better Auth schema (rerun after adding a plugin) |
-| `npm run db:setup-roles` | One time: creates `rubi_app` and `rubi_public` on `main` |
+| Script                   | What it does                                                           |
+| ------------------------ | ---------------------------------------------------------------------- |
+| `npm run typecheck`      | Generates route types, then runs `tsc`                                 |
+| `npm run lint`           | ESLint (Next.js core web vitals and TypeScript rules)                  |
+| `npm run format`         | Prettier, writes fixes (`format:check` only reports)                   |
+| `npm run build`          | Production build (no migrations)                                       |
+| `npm run vercel-build`   | What Vercel runs: migrations under an advisory lock, then `next build` |
+| `npm run db:generate`    | Writes a SQL migration from the schema in `src/lib/db/schema/`         |
+| `npm run db:migrate`     | Applies migrations to the branch in `.env.local`                       |
+| `npm run auth:generate`  | Regenerates the Better Auth schema (rerun after adding a plugin)       |
+| `npm run db:setup-roles` | One time: creates `rubi_app` and `rubi_public` on `main`               |
 
 ## Layout
 

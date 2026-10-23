@@ -14,7 +14,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
 | 1 | Stack & architecture | Foundation | done |
-| 2 | Coding standards & tooling | Foundation | planned |
+| 2 | Coding standards & tooling | Foundation | done |
 | 3 | Data model | Foundation | planned |
 | 4 | Design system & UI foundation | Foundation | planned |
 | 5 | Seller sign up & store setup | Slice 1 | planned |
@@ -40,10 +40,12 @@ spec [0001](../specs/0001-stack-architecture/index.md) · code in `src/`, `scrip
 - [x] Decide the stack (spec): `/architect stack & architecture`
 - [x] Scaffold from the decision: `/develop stack & architecture`
 
-### 2. Coding standards & tooling
+### 2. Coding standards & tooling · done
 Capture conventions, then install lint, format, and pre-commit enforcement from the real scaffolded project.
 **Done when:** root `AGENTS.md` reflects the real stack, and lint, format and pre-commit run clean.
-- [ ] Capture conventions + tooling choices: `/audit`
+code in `AGENTS.md`, `eslint.config.mjs`, `.prettierrc.json`, `.husky/`, `.github/`
+- [x] Capture conventions + tooling choices: `/audit`
+- [x] Install lint, format, pre-commit and CI: `/develop tooling`
 
 ### 3. Data model · needs a decision
 Core entities every feature builds on: sellers, stores, products, orders, order items, customers, payments. Shaped so expenses, online payments and insights can be added later without a breaking migration.

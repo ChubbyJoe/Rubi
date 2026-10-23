@@ -44,8 +44,11 @@ export function withStore<T>(storeId: string, fn: (tx: Tx) => Promise<T>) {
  * reads go through here and never touch the session, cookies or headers.
  */
 export function withPublic<T>(fn: (tx: Tx) => Promise<T>) {
-  return db.transaction(async (tx) => {
-    await tx.execute(sql`set local role rubi_public`);
-    return fn(tx);
-  }, { accessMode: "read only" });
+  return db.transaction(
+    async (tx) => {
+      await tx.execute(sql`set local role rubi_public`);
+      return fn(tx);
+    },
+    { accessMode: "read only" },
+  );
 }
