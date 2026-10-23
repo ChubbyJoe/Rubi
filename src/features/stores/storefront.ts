@@ -18,6 +18,8 @@ export const PLACEHOLDER_SLUG = "__shell__";
 export type ResolvedStore = {
   readonly storeId: string;
   readonly currentSlug: string;
+  /** Shown in the shop header (spec 0003). */
+  readonly name: string;
   /** True when `slug` is an old slug; the route redirects to `currentSlug`. */
   readonly retired: boolean;
 };
@@ -40,6 +42,7 @@ export async function resolveStoreSlug(slug: string): Promise<ResolvedStore> {
       .select({
         storeId: storeSlugs.storeId,
         currentSlug: stores.slug,
+        name: stores.name,
         retiredAt: storeSlugs.retiredAt,
       })
       .from(storeSlugs)
@@ -49,5 +52,10 @@ export async function resolveStoreSlug(slug: string): Promise<ResolvedStore> {
   if (!row) notFound();
 
   cacheTag(storeTag(row.storeId));
-  return { storeId: row.storeId, currentSlug: row.currentSlug, retired: row.retiredAt !== null };
+  return {
+    storeId: row.storeId,
+    currentSlug: row.currentSlug,
+    name: row.name,
+    retired: row.retiredAt !== null,
+  };
 }

@@ -16,6 +16,10 @@ export type SignedInUser = {
 export type SellerContext = SignedInUser & {
   /** Pass to `withStore(storeId, ...)` for every store scoped read and write. */
   storeId: string;
+  /** For the Admin topbar (spec 0003): name, View shop link, and whether to show it. */
+  storeName: string;
+  storeSlug: string;
+  storePublished: boolean;
 };
 
 /**
@@ -35,8 +39,22 @@ export const getSignedInUser = cache(async (): Promise<SignedInUser> => {
 export const getSellerContext = cache(async (): Promise<SellerContext> => {
   const user = await getSignedInUser();
   const [store] = await withUser(user.userId, (tx) =>
-    tx.select({ id: stores.id }).from(stores).where(eq(stores.ownerUserId, user.userId)),
+    tx
+      .select({
+        id: stores.id,
+        name: stores.name,
+        slug: stores.slug,
+        publishedAt: stores.publishedAt,
+      })
+      .from(stores)
+      .where(eq(stores.ownerUserId, user.userId)),
   );
   if (!store) redirect("/app/setup");
-  return { ...user, storeId: store.id };
+  return {
+    ...user,
+    storeId: store.id,
+    storeName: store.name,
+    storeSlug: store.slug,
+    storePublished: store.publishedAt !== null,
+  };
 });
