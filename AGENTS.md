@@ -22,6 +22,8 @@ npm run build          # Build (no migrations); Vercel runs npm run vercel-build
 npm run typecheck      # Route types + tsc
 npm run db:generate    # SQL migration from src/lib/db/schema/
 npm run db:migrate     # Apply migrations to the branch in .env.local
+npm run db:seed        # Two published stores, products and orders (refuses the main branch; needs NEON_MAIN_ENDPOINT_ID)
+npm run db:check-model # Spec 0002 RLS, grant and checkout checks on your dev branch
 npm run lint           # ESLint
 npm run format         # Prettier write (format:check in CI)
 # Test: not installed yet (/test)
@@ -33,11 +35,12 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title/index.md`. Scope lives i
 
 ## Rules
 
-- **Layout**: `src/app` holds routes only and imports from `src/features/<domain>`; features never import from routes. Shared infrastructure lives in `src/lib` (`db`, `auth`, `env`, `logger`); the Drizzle schema lives only in `src/lib/db/schema/`.
+- **Layout**: `src/app` holds routes only and imports from `src/features/<domain>`; features never import from routes. Shared infrastructure lives in `src/lib` (`db`, `auth`, `env`, `logger`, `result`, `money`); the Drizzle schema lives only in `src/lib/db/schema/`.
 - **Functional style**: plain functions over classes, pure by default, no shared mutable state (module level values are constants). Side effects (DB, network, cache invalidation) stay at the edges: server actions, route handlers, `withStore` / `withPublic`.
 - **Immutable data**: `const` and `readonly`, never mutate inputs; prefer `map` / `filter` / `reduce` where it reads better.
 - **Errors**: services return a typed result (`{ ok: true, data } | { ok: false, error }`) for expected failures (validation, not found, conflict); only unexpected faults throw. Server actions map results to field errors; validate every input with a shared Zod schema on the server too.
 - **Tenant isolation**: every store scoped query runs inside `withStore(storeId, fn)`; `storeId` only ever comes from `getSellerContext()`, never client input. Storefront reads use `withPublic(fn)` and never touch session, cookies or headers. Never a session level `SET` (pooler is transaction mode); never the owner role at runtime.
+- **Data model** ([spec 0002](docs/specs/0002-data-model/index.md)): every table carries `store_id` with `TO rubi_app` policies (`pgPolicy` in the schema); money is `bigint` kobo in `*_kobo` columns, shown with `formatNaira`. `rubi_public` has column grants only, so storefront queries name their columns and every new public column needs a grant migration. The app never deletes orders, customers, order events, products or variants (archive with `archived_at`). Guest orders go only through the `place_order` SQL function via `withCheckout`; store setup uses `withUser` / `withNewStore` with `getSignedInUser()`. Functions, grants and deferred keys live in custom migrations (`drizzle-kit generate --custom`).
 - **Storefront cache**: storefront data functions use `"use cache"`, `cacheLife('days')` and tags `store:<id>`, `store-slug:<slug>`, `product:<id>`. Every seller mutation calls `updateTag` for each affected tag (both slugs on a rename). The dashboard is never cached.
 - **Migrations**: drizzle-kit SQL files are committed and reviewed; expand then contract. Rerun `npm run auth:generate` after adding a Better Auth plugin.
 - **Accessibility**: WCAG AA on all UI: a label on every input, visible focus, 4.5:1 contrast, 44px tap targets.
@@ -73,3 +76,13 @@ MCP servers: Neon (connected), Vercel (connected)
 <!-- Nested AGENTS.md files are listed here as they are created -->
 
 _Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
