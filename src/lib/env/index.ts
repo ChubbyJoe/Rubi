@@ -21,6 +21,8 @@ export const env = createEnv({
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.url(),
     VERCEL_URL: z.string().optional(),
+    // Gates dev only pages such as /dev/ui (404 in production).
+    VERCEL_ENV: z.enum(["production", "preview", "development"]).optional(),
     VERCEL_BRANCH_URL: z.string().optional(),
     // Optional until Add a product (feature 6).
     R2_ACCOUNT_ID: z.string().optional(),
@@ -46,6 +48,7 @@ export const env = createEnv({
       ? httpsUrl(process.env.VERCEL_BRANCH_URL, process.env.VERCEL_URL)
       : (process.env.BETTER_AUTH_URL ?? httpsUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL)),
     VERCEL_URL: process.env.VERCEL_URL,
+    VERCEL_ENV: process.env.VERCEL_ENV,
     VERCEL_BRANCH_URL: process.env.VERCEL_BRANCH_URL,
     R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
     R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,

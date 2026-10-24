@@ -46,6 +46,7 @@ describe("resolveStoreSlug", () => {
     expect(await resolveStoreSlug(live.slug)).toEqual({
       storeId: live.storeId,
       currentSlug: live.slug,
+      name: `Test front-live-${run}`,
       retired: false,
     });
   });
@@ -86,6 +87,7 @@ describe("resolveStoreSlug", () => {
     expect(await resolveStoreSlug(live.slug)).toEqual({
       storeId: live.storeId,
       currentSlug: renamed,
+      name: `Test front-live-${run}`,
       retired: true,
     });
     expect(await resolveStoreSlug(renamed)).toMatchObject({ retired: false });

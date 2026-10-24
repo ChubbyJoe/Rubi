@@ -10,11 +10,11 @@ export function generateStaticParams() {
 // Scaffold placeholder. Public storefront (feature 7) loads the product.
 export default function ProductPage({ params }: PageProps<"/s/[storeSlug]/p/[productSlug]">) {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-3 p-4">
-      <Suspense fallback={<p>Loading product…</p>}>
+    <div className="flex flex-col gap-3">
+      <Suspense>
         <Product params={params} />
       </Suspense>
-    </main>
+    </div>
   );
 }
 
@@ -24,10 +24,10 @@ async function Product({ params }: Pick<PageProps<"/s/[storeSlug]/p/[productSlug
   if (store.retired) permanentRedirect(`/s/${store.currentSlug}/p/${productSlug}`);
   return (
     <>
-      <Link href={`/s/${store.currentSlug}`} className="underline">
-        {store.currentSlug}
+      <Link href={`/s/${store.currentSlug}`} className="text-link underline">
+        {store.name}
       </Link>
-      <h1 className="text-2xl font-semibold">{productSlug}</h1>
+      <h1 className="text-display-lg">{productSlug}</h1>
     </>
   );
 }

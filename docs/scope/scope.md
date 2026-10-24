@@ -16,7 +16,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | done |
 | 3 | Data model | Foundation | done |
-| 4 | Design system & UI foundation | Foundation | planned |
+| 4 | Design system & UI foundation | Foundation | done |
 | 5 | Seller sign up & store setup | Slice 1 | planned |
 | 6 | Add a product | Slice 1 | planned |
 | 7 | Public storefront & order placement | Slice 1 | planned |
@@ -60,10 +60,18 @@ spec [0002](../specs/0002-data-model/index.md) · code in `src/lib/db/`, `src/fe
 - [x] Verify it: `/check verify data model`
 - [x] Test it: `/test data model`
 
-### 4. Design system & UI foundation · needs a decision
+### 4. Design system & UI foundation · done
 Visual language, layout primitives and base components, mobile first, so the seller dashboard and storefronts feel cohesive, credible and accessible.
 **Done when:** `design.md` covers type, color, spacing and components; base components meet contrast, labeling and keyboard basics and stay light on low data connections.
-- [ ] Design it (spec): `/architect design system & UI foundation`
+spec [0003](../specs/0003-design-system-ui-foundation/index.md) · code in `DESIGN.md`, `src/app/globals.css`, `src/components/`, `src/lib/design/`, `e2e/`
+- [x] Design it (spec): `/architect design system & UI foundation`
+- [x] Build it: `/develop design system & UI foundation`
+  - [x] Thread: adapted `DESIGN.md`, Satoshi, shadcn init, full token contract, contrast and drift tests, Button on both surfaces (AC-1 to AC-3, AC-5, AC-11)
+  - [x] Primitives and status: restyled shadcn primitives, toasts, skeleton, `StatusBadge`, token lint rule (AC-2, AC-6, AC-7, AC-13, AC-14)
+  - [x] Brand and shells: wordmark and icons, Admin shell, shop theme contract and Shop shell (AC-3, AC-4, AC-8 to AC-10, AC-13)
+  - [x] Preview and proof: `/dev/ui` pages, Playwright with axe at mobile size (AC-12)
+- [x] Verify it: `/check verify design system & UI foundation`
+- [x] Test it: `/test design system & UI foundation`
 
 ## Slice 1: Core sell loop
 

@@ -1,26 +1,398 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/* Placeholder tokens. The Design system spec (feature 4) defines the look. */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Skill and spec docs quote example classes; keep them out of the bundle. */
+@source not "../../.claude";
+@source not "../../docs";
+@source not "../../DESIGN.md";
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-}
+/*
+ * Rubi tokens (spec 0003, DESIGN.md). Values mirror src/lib/design/tokens.ts;
+ * src/lib/design/tokens.test.ts fails on any drift. Components use only the
+ * names below (bg-background, text-muted-foreground), never a hex value.
+ *
+ * Block order matters:
+ *   1. :root                              warm light (Admin light, Rubi light, default shops)
+ *   2. html:has([data-neutrals="stone"])  stone neutrals, never primary or ring
+ *   3. dark media + Admin surface         Admin dark only; shops never go dark
+ *   4. ShopShell's injected seller theme  html:has([data-surface="shop"]), later, so it wins
+ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* shadcn's dark: variant fires only on the Admin surface in system dark mode. */
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    html:has([data-surface="admin"]) & {
+      @slot;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+/* 1. Warm light */
+:root {
+  color-scheme: light;
+
+  --background: #fcf7f8;
+  --foreground: #2a1a1d;
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--background);
+  --popover-foreground: var(--foreground);
+  --body: #4a3539;
+  --muted-foreground: #6e5a5e;
+  --muted-soft: #9a888c;
+  --muted: #f6eef0;
+  --accent: var(--muted);
+  --accent-foreground: var(--foreground);
+  --secondary: #f1e5e8;
+  --secondary-foreground: var(--foreground);
+  --border: #eadcdf;
+  --hairline-soft: #f2e8ea;
+  --input: #987d83;
+  --ring: #2a1a1d;
+  --primary: #a31621;
+  --primary-foreground: #fcf7f8;
+  --primary-active: #7e1019;
+  --primary-tint: #edb8bd;
+  --primary-mid: #d4646d;
+  --destructive: #b45309;
+  --destructive-foreground: #fcf7f8;
+  --destructive-active: #92400e;
+  --toast: #2a1a1d;
+  --toast-foreground: #fcf7f8;
+  --nav-indicator: #a31621;
+  --scrim: rgb(0 0 0 / 0.5);
+  --status-success-foreground: #166534;
+  --status-success: #e7f3ea;
+  --status-info-foreground: #1d4ed8;
+  --status-info: #e8eefc;
+  --status-attention-foreground: #92400e;
+  --status-attention: #fbecdf;
+  --status-neutral-foreground: #6e5a5e;
+  --status-neutral: #f1e5e8;
+  --legal-link: #2563eb;
+  --chart-1: #a31621;
+  --chart-2: #4f86c6;
+  --chart-3: #edb8bd;
+  --chart-4: #d4646d;
+  --chart-5: #7e1019;
+
+  --sidebar: var(--muted);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--secondary);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  --float-shadow:
+    rgba(42, 26, 29, 0.05) 0 0 0 1px, rgba(42, 26, 29, 0.05) 0 2px 6px 0,
+    rgba(126, 16, 25, 0.1) 0 8px 20px -4px;
+}
+
+/* 2. Stone neutrals (shops with a custom accent). */
+html:has([data-neutrals="stone"]) {
+  --background: #fafaf9;
+  --foreground: #1c1917;
+  --body: #44403c;
+  --muted-foreground: #57534e;
+  --muted-soft: #a8a29e;
+  --muted: #f5f5f4;
+  --secondary: #efedeb;
+  --border: #e7e5e4;
+  --hairline-soft: #f0eeec;
+  --input: #8a8580;
+  --toast: #1c1917;
+  --toast-foreground: #fafaf9;
+  --status-neutral-foreground: #57534e;
+  --status-neutral: #efedeb;
+
+  --float-shadow:
+    rgba(42, 26, 29, 0.05) 0 0 0 1px, rgba(42, 26, 29, 0.05) 0 2px 6px 0,
+    rgba(28, 25, 23, 0.08) 0 8px 20px -4px;
+}
+
+/* 3. Admin dark. Portals sit outside the surface wrapper but inside html. */
+@media (prefers-color-scheme: dark) {
+  html:has([data-surface="admin"]) {
+    color-scheme: dark;
+
+    --background: #1f1719;
+    --foreground: #f6eef0;
+    --body: #ddd0d3;
+    --muted-foreground: #b8a7ab;
+    --muted-soft: #7d6a6e;
+    --muted: #2a2023;
+    --secondary: #352a2d;
+    --border: #3d3034;
+    --hairline-soft: #33282b;
+    --input: #8a767a;
+    --ring: #f6eef0;
+    --primary: #c4303b;
+    --primary-foreground: #fcf7f8;
+    --primary-active: #a8232d;
+    --primary-tint: #4a1418;
+    --primary-mid: #7e1f26;
+    --destructive: #f0a868;
+    --destructive-foreground: #1f1719;
+    --destructive-active: #f5bd8a;
+    --toast: #fcf7f8;
+    --toast-foreground: #2a1a1d;
+    --nav-indicator: #d9505a;
+    --scrim: rgb(0 0 0 / 0.6);
+    --status-success-foreground: #4ade80;
+    --status-success: color-mix(in srgb, var(--status-success-foreground) 16%, var(--background));
+    --status-info-foreground: #93b4f5;
+    --status-info: color-mix(in srgb, var(--status-info-foreground) 16%, var(--background));
+    --status-attention-foreground: #f0a868;
+    --status-attention: color-mix(
+      in srgb,
+      var(--status-attention-foreground) 16%,
+      var(--background)
+    );
+    --status-neutral-foreground: #b8a7ab;
+    --status-neutral: color-mix(in srgb, var(--status-neutral-foreground) 16%, var(--background));
+    --legal-link: #93b4f5;
+    --chart-1: #c4303b;
+    --chart-2: #4f86c6;
+    --chart-3: #4a1418;
+    --chart-4: #7e1f26;
+    --chart-5: #d9505a;
+  }
+}
+
+@theme inline {
+  --font-sans:
+    var(--font-satoshi), Inter, -apple-system, system-ui, Roboto, "Helvetica Neue", sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted-soft: var(--muted-soft);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-surface-strong: var(--secondary);
+  --color-border: var(--border);
+  --color-hairline-soft: var(--hairline-soft);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-active: var(--primary-active);
+  --color-primary-tint: var(--primary-tint);
+  --color-primary-mid: var(--primary-mid);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-active: var(--destructive-active);
+  --color-toast: var(--toast);
+  --color-toast-foreground: var(--toast-foreground);
+  --color-nav-indicator: var(--nav-indicator);
+  --color-scrim: var(--scrim);
+  --color-status-success: var(--status-success);
+  --color-status-success-foreground: var(--status-success-foreground);
+  --color-status-info: var(--status-info);
+  --color-status-info-foreground: var(--status-info-foreground);
+  --color-status-attention: var(--status-attention);
+  --color-status-attention-foreground: var(--status-attention-foreground);
+  --color-status-neutral: var(--status-neutral);
+  --color-status-neutral-foreground: var(--status-neutral-foreground);
+  --color-legal-link: var(--legal-link);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --shadow-float: var(--float-shadow);
+}
+
+@theme {
+  /* DESIGN.md rounded scale: controls 12px (sm), cards 18px (md). */
+  --radius-xs: 6px;
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+
+  /* sm stays 640px for shadcn's generated classes; 2xl is not used. */
+  --breakpoint-md: 46.5rem;
+  --breakpoint-lg: 70.5rem;
+  --breakpoint-xl: 90rem;
+  --breakpoint-2xl: initial;
+
+  --container-shop: 80rem;
+  --container-admin: 75rem;
+
+  /* DESIGN.md type tokens. stat-display, price-lg and table go with tabular-nums. */
+  --text-stat-display: 2rem;
+  --text-stat-display--line-height: 1.15;
+  --text-stat-display--font-weight: 600;
+  --text-stat-display--letter-spacing: -0.016em;
+  --text-display-xl: 1.75rem;
+  --text-display-xl--line-height: 1.29;
+  --text-display-xl--font-weight: 700;
+  --text-display-xl--letter-spacing: 0;
+  --text-display-lg: 1.375rem;
+  --text-display-lg--line-height: 1.18;
+  --text-display-lg--font-weight: 500;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-price-lg: 1.375rem;
+  --text-price-lg--line-height: 1.18;
+  --text-price-lg--font-weight: 600;
+  --text-price-lg--letter-spacing: 0;
+  --text-display-sm: 1.25rem;
+  --text-display-sm--line-height: 1.2;
+  --text-display-sm--font-weight: 600;
+  --text-display-sm--letter-spacing: -0.009em;
+  --text-title-md: 1rem;
+  --text-title-md--line-height: 1.25;
+  --text-title-md--font-weight: 600;
+  --text-title-md--letter-spacing: 0;
+  --text-title-sm: 1rem;
+  --text-title-sm--line-height: 1.25;
+  --text-title-sm--font-weight: 500;
+  --text-title-sm--letter-spacing: 0;
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.5;
+  --text-body-md--font-weight: 400;
+  --text-body-md--letter-spacing: 0;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.43;
+  --text-body-sm--font-weight: 400;
+  --text-body-sm--letter-spacing: 0;
+  --text-table: 0.875rem;
+  --text-table--line-height: 1.43;
+  --text-table--font-weight: 400;
+  --text-table--letter-spacing: 0;
+  --text-caption: 0.875rem;
+  --text-caption--line-height: 1.29;
+  --text-caption--font-weight: 500;
+  --text-caption--letter-spacing: 0;
+  --text-caption-sm: 0.8125rem;
+  --text-caption-sm--line-height: 1.23;
+  --text-caption-sm--font-weight: 400;
+  --text-caption-sm--letter-spacing: 0;
+  --text-column-head: 0.75rem;
+  --text-column-head--line-height: 1.33;
+  --text-column-head--font-weight: 600;
+  --text-column-head--letter-spacing: 0.017em;
+  --text-badge: 0.75rem;
+  --text-badge--line-height: 1.33;
+  --text-badge--font-weight: 600;
+  --text-badge--letter-spacing: 0;
+  --text-button-md: 1rem;
+  --text-button-md--line-height: 1.25;
+  --text-button-md--font-weight: 500;
+  --text-button-md--letter-spacing: 0;
+  --text-button-sm: 0.875rem;
+  --text-button-sm--line-height: 1.29;
+  --text-button-sm--font-weight: 500;
+  --text-button-sm--letter-spacing: 0;
+  --text-link: 0.875rem;
+  --text-link--line-height: 1.43;
+  --text-link--font-weight: 400;
+  --text-link--letter-spacing: 0;
+  --text-nav-link: 0.9375rem;
+  --text-nav-link--line-height: 1.33;
+  --text-nav-link--font-weight: 500;
+  --text-nav-link--letter-spacing: 0;
+
+  --animate-skeleton:
+    skeleton-in 0s linear 300ms forwards, skeleton-shimmer 1.6s ease-in-out 300ms infinite;
+
+  @keyframes skeleton-in {
+    to {
+      visibility: visible;
+    }
+  }
+
+  @keyframes skeleton-shimmer {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+}
+
+/*
+ * Focus: a solid 2px outline in --ring, offset 2px, on every control. Unlayered
+ * so it beats the outline-none that generated components carry. :where keeps
+ * its specificity low, so the menu item and invalid rules below win by order.
+ * Menu items sit inside clipped popovers, so their outline goes inside.
+ */
+:where(
+    a[href],
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [tabindex]:not([tabindex="-1"]),
+    [role="button"],
+    [role="tab"],
+    [role="checkbox"],
+    [role="radio"],
+    [role="switch"],
+    [role="combobox"]
+  ):not([data-slot="input-group-control"]):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  --tw-ring-shadow: 0 0 #0000;
+}
+
+:is(
+  [role="menuitem"],
+  [role="menuitemcheckbox"],
+  [role="menuitemradio"],
+  [role="option"]
+):focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+[aria-invalid="true"]:focus-visible {
+  outline-color: var(--destructive);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-body-md text-foreground;
+  }
+  ::placeholder {
+    color: var(--muted-foreground);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-skeleton {
+    animation: skeleton-in 0s linear 300ms forwards;
+  }
 }

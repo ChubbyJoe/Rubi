@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { AdminSurface } from "@/components/admin-surface";
 
 export const metadata: Metadata = { title: "Dashboard", robots: { index: false } };
 
+// The Admin surface only, no data reads: /app/setup sits outside the (shell)
+// group, so a seller without a store never meets getSellerContext() here.
 export default function DashboardLayout({ children }: LayoutProps<"/app">) {
-  return <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col p-4">{children}</div>;
+  return <AdminSurface>{children}</AdminSurface>;
 }

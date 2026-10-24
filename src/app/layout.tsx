@@ -1,11 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import localFont from "next/font/local";
 import { env } from "@/lib/env";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Self hosted (spec 0003): no third party font requests. Satoshi has no ₦,
+// so the fallback stack draws that one glyph.
+const satoshi = localFont({
+  src: "./fonts/Satoshi-Variable.woff2",
+  variable: "--font-satoshi",
+  weight: "300 900",
+  display: "swap",
+  preload: true,
+  adjustFontFallback: "Arial",
 });
 
 export const metadata: Metadata = {
@@ -18,11 +24,12 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
+    <html lang="en" className={`${satoshi.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
