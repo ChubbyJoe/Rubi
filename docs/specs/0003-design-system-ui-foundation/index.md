@@ -1,7 +1,7 @@
 # 0003. DESIGN.md tokens on shadcn/ui with two themed surfaces
 
 **Date**: 2026-10-23
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 
