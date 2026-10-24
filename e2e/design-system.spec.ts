@@ -70,6 +70,27 @@ for (const { name, path, colorScheme } of VARIANTS) {
   });
 }
 
+// AC-6: on an invalid field the error outline replaces the ring color.
+for (const colorScheme of ["light", "dark"] as const) {
+  test(`invalid field focus outline is the error color (${colorScheme})`, async ({ page }) => {
+    await open(page, "/dev/ui", colorScheme);
+    const field = page.locator('input[data-slot="input"][aria-invalid="true"]').first();
+    await field.focus();
+    const destructive = await field.evaluate((el) => {
+      const probe = document.createElement("span");
+      probe.style.color = "var(--destructive)";
+      el.parentElement!.appendChild(probe);
+      const color = getComputedStyle(probe).color;
+      probe.remove();
+      return color;
+    });
+    // transition-colors animates outline-color, so wait for it to settle.
+    await expect
+      .poll(() => field.evaluate((el) => getComputedStyle(el).outlineColor))
+      .toBe(destructive);
+  });
+}
+
 test("shop preview is never dark", async ({ page }) => {
   await open(page, "/dev/ui/shop", "dark");
   const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);

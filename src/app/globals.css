@@ -337,10 +337,11 @@ html:has([data-neutrals="stone"]) {
 
 /*
  * Focus: a solid 2px outline in --ring, offset 2px, on every control. Unlayered
- * so it beats the outline-none that generated components carry. Menu items sit
- * inside clipped popovers, so their outline goes inside.
+ * so it beats the outline-none that generated components carry. :where keeps
+ * its specificity low, so the menu item and invalid rules below win by order.
+ * Menu items sit inside clipped popovers, so their outline goes inside.
  */
-:is(
+:where(
     a[href],
     button,
     input,
