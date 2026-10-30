@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.11",
-    "@vercel/functions": "^3.10.3",
+    "@vercel/functions": "^3.10.4",
     "better-auth": "^1.7.12",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.0",
